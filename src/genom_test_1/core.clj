@@ -5,3 +5,6 @@
   [x]
   (println x "Hello, World!"))
 
+(defn try
+  (println "try harder"))
+
