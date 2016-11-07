@@ -5,6 +5,10 @@
   [x]
   (println x "Hello, World!"))
 
-(defn try
+(defn try []
   (println "try harder"))
 
+
+(def it-works "WOW IT WORKS")
+
+it-works
