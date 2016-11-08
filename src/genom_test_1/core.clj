@@ -12,3 +12,5 @@
 (def it-works "WOW IT WORKS")
 
 it-works
+
+(def omg-new "LOLKEK")
