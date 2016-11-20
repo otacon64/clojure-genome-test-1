@@ -1,6 +1,7 @@
 (ns genom-test-1.core-test
-  (:require [genom-test-1.core :refer :all])
+  (:require [genom-test-1.core :refer :all] :reload)
   (:use expectations))
+
 
 (expect nil? nil)
 
@@ -42,5 +43,40 @@
         (calcualte-fitness test-genome-1))
 
 ;; cross-over tests
+test-genome-1
+test-genome-2
+(cross-over test-genome-1 test-genome-2)
+
+;; rand-prob test
+(defn calculate-freq [amount genome-1 genome-2]
+  (->> (repeatedly amount #(rand-prob
+                             genome-1
+                             genome-2))
+       (frequencies)
+
+       ((fn [m]
+         (zipmap (keys m)
+                 (map #(float (/ % amount))
+                      (vals m)))))))
 
 
+(defn theoretical-freq [genome-1 genome-2]
+  (->> [genome-1 genome-2]
+     (map calcualte-fitness)
+     ((fn [[fit1 fit2]]
+       (let [fit-sum (+ fit1 fit2)]
+       (list (float (/ fit2 fit-sum))
+             (float (/ fit1 fit-sum))))))
+       (zipmap [genome-1 genome-2])))
+
+(defn check-tol [amount tol genome-1 genome-2]
+  (->> [(theoretical-freq genome-1 genome-2)
+      (calculate-freq amount genome-1 genome-2)]
+     (apply merge-with #(- %1 %2))
+     (vals)
+     (map #(< (Math/abs %) tol))))
+
+(expect '(true true)
+        (check-tol 10000 0.008
+                   (generate-genome 10)
+                   (generate-genome 10)))

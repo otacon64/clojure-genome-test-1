@@ -1,5 +1,4 @@
-(ns genom-test-1.core
-  (:require [expectations :refer :all]))
+(ns genom-test-1.core)
 
 (def test-pop (list [1 2 3] [4 5 6] [7 8 9]))
 
@@ -57,11 +56,21 @@
 
 
 
-(defn rand-prob [fitness-1 fitness-2]
-  (let [fitness-sum (+ fitness-1 fitness-2)]
-    (if (< (rand-int fitness-sum) fitness-1)
-      fitness-1
-      fitness-2)))
+(defn rand-prob [genome-1 genome-2]
+  "returns winning genome based on random chance with
+  chances inversely  to their fitnesses"
+  (let [ fitness-1 (calcualte-fitness genome-1)
+         fitness-2 (calcualte-fitness genome-2)
+         fitness-sum (+ fitness-1 fitness-2)]
+    (if (>= (rand-int fitness-sum) fitness-1)
+      genome-1
+      genome-2)))
+
+(rand-prob [0 1 2 3 4] [0 1 2 3])
+
+
+
+
 
 
 
