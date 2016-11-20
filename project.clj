@@ -5,4 +5,5 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [expectations "2.1.8"]]
-  :plugins [[lein-autoexpect "1.9.0"]])
+  :plugins [[lein-autoexpect "1.9.0"]
+            [lein-expectations "0.0.8"]])

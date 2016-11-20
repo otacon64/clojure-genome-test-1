@@ -1,4 +1,5 @@
-(ns genom-test-1.core)
+(ns genom-test-1.core
+  (:require [expectations :refer :all]))
 
 (def test-pop (list [1 2 3] [4 5 6] [7 8 9]))
 
@@ -31,21 +32,12 @@
 (defn random-unique-numbers [n]
   (distinct (repeatedly #(rand-int n))))
 
-(take 2 (random-unique-numbers 5))
-
-(def genome-pairs (apply map vector (repeatedly 2 #(generate-genome 5))))
-genome-pairs
-
-(def genome-1 (first (apply map vector genome-pairs)))
-genome-1
-(def genome-2 (second (apply map vector genome-pairs)))
-genome-2
-
 (defn cross-over [genome-1 genome-2]
   (apply map vector (let [genome-pairs (map vector genome-1 genome-2)]
     (map #(if (some (partial = (reverse %)) genome-pairs)
           (vec (reverse %))
           %) genome-pairs))))
+
 
 (defn breed-population [population breedings-amount]
   ;;pick two random creatures and breed them
@@ -63,37 +55,7 @@ genome-2
                    (distinct (repeatedly
                                #(rand-int (count genome)))))))))
 
-(def test-genome-1 (generate-genome 9))
-test-genome-1
-(def mutated-genome-test-1 (mutate 1 test-genome-1))
-mutated-genome-test-1
-(calcualte-fitness test-genome-1)
-(calcualte-fitness mutated-genome-test-1)
 
-([1 2 3] 1)
-
-(defn tournament-selection [population survivours]
-  ;;pick two and check who is better according to fitness. Calculate probability
-  (map #(vector % (calcualte-fitness (nth population %))) (take 2 (distinct (repeatedly #(rand-int (count population))))))
-  )
-
-(defn tourn-second-try [population survivours]
-  (take 2 (distinct (repeatedly #(rand-int (count population)))))
-  )
-(tourn-second-try test-pop 1)
-
-
-test-pop
-(map #(calcualte-fitness %) test-pop)
-(tournament-selection test-pop 1)
-
-(def test-genome-1 (generate-genome 5))
-(def test-genome-2 (generate-genome 5))
-test-genome-1
-test-genome-2
-
-(calcualte-fitness test-genome-1)
-(calcualte-fitness test-genome-2)
 
 (defn rand-prob [fitness-1 fitness-2]
   (let [fitness-sum (+ fitness-1 fitness-2)]
@@ -101,7 +63,6 @@ test-genome-2
       fitness-1
       fitness-2)))
 
-(frequencies (repeatedly 10000 #(rand-prob 3 7)))
 
 
 
