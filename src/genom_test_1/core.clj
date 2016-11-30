@@ -5,6 +5,8 @@
 ;; matrix with distances for cities
 ;;
 
+()
+
 (def
   ^{:doc "distances matrix for the cities"}
   ;;           0   1   2   3   4   5   6   7   8   9
@@ -53,18 +55,6 @@
           (vec (reverse %))
           %) genome-pairs))))
 
-
-(defn
-  ^{:doc "breeds the population"}
-  breed-population [population breedings-amount]
-  ;;pick two random creatures and breed them
-  (mapcat identity (repeatedly breedings-amount (fn [] apply cross-over (take 2
-        (map #(nth population %)
-             (random-unique-numbers (count population))))))))
-             ;; (distinct (repeatedly #(rand-int (count population))))))))))
-
-
-
 (defn
   ^{:doc "mutates genome with mutations-amount random mutations"}
   mutate [mutations-amount genome]
@@ -76,8 +66,6 @@
                    (distinct (repeatedly
                                #(rand-int (count genome)))))))))
 
-
-
 (defn
   ^{:doc "returns winning genome based on random chance with
   chances inversely  to their fitnesses"}
@@ -88,6 +76,31 @@
     (if (>= (rand-int fitness-sum) fitness-1)
       genome-1
       genome-2)))
+
+
+(defn
+  ^{:doc "breeds the population"}
+  breed-population [population breedings-amount]
+  ;;pick two random creatures and breed them
+  (mapcat identity (repeatedly breedings-amount (fn [] apply cross-over (take 2
+        (map #(nth population %)
+             (random-unique-numbers (count population))))))))
+             ;; (distinct (repeatedly #(rand-int (count population))))))))))
+
+
+(def test-pop (list 10. 1. 0.5 2 1.5 0.5 1.0 1.4))
+test-pop
+
+(map #(hash-map :val %) test-pop)
+
+(let [val-sum (reduce + test-pop)]
+  val-sum)
+
+
+
+
+
+
 
 
 
