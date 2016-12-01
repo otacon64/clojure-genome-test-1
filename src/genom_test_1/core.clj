@@ -1,11 +1,11 @@
-(ns genom-test-1.core)
+(ns genom-test-1.core
+  (:require [clojure.pprint :refer [pprint print-table]]))
 (use 'clojure.repl)
 
 ;;
 ;; matrix with distances for cities
 ;;
 
-()
 
 (def
   ^{:doc "distances matrix for the cities"}
@@ -88,8 +88,83 @@
              ;; (distinct (repeatedly #(rand-int (count population))))))))))
 
 
-(def test-pop (list 10. 1. 0.5 2 1.5 0.5 1.0 1.4))
+
+;; reduce works like this:
+;; reduce f val [x1 x2 x3]
+;; (f (f (f val x1) x2) x3)
+
+;; if I have [10 1 0.5]
+;; I want to have [10 11 11.5]
+;; 0 + 10 = 10
+;; 10 + 1 = 11
+;; 11 + 0.5 = 11.5
+
+;; val + x1 = res1
+;; res1 + x2 = res2
+;; res2 + x3 = res3
+
+;; res should be a vector [10 11 11.5]
+;; res1 [10]
+;; res2 [10 11]
+;; res3 [10 11 11.5]
+
+;; conj add a value to the end of vector
+;; (conj coll x)
+;; (conj res (+ last-val-res xi))
+
+;; f should be...
+;;
+
+(doc generate-population)
+
+(def test-pop (generate-population 5 5))
 test-pop
+
+;; generate fitness of each genome
+(def fitnesses (mapv calcualte-fitness test-pop))
+fitnesses
+
+;; get processed vector
+(def rulete-position (reduce proc-pop [] fitnesses))
+rulete-position
+
+;; zip rulete-position to population
+(def pop-map (map
+       #(zipmap [:val :rulete :fitness] [%1 %2 %3])
+  test-pop rulete-position fitnesses))
+pop-map
+
+(print-table pop-map)
+
+;; get genome by rulete position....
+;; if random value is lower or equal to rulete then we have our guy
+
+(->> pop-map last :rulete)
+()
+
+(defn return-random-rulete [population-map]
+  (let [rulete-value (rand-int (-> population-map last :rulete inc))]
+    (first (filter
+             #(<= rulete-value (% :rulete))
+             population-map))))
+
+(return-random-rulete pop-map)
+
+
+(apply max-key :rulete pop-map)
+
+(defn proc-pop [acc x]
+  (conj acc
+        ((fnil #(+ x %) 0) (peek acc))))
+
+(reduce proc-pop [] [1 2 3])
+
+(proc-pop [] 1)
+
+(let [x 1]
+  (fnil #(+ x) 0))
+
+
 
 (map #(hash-map :val %) test-pop)
 
