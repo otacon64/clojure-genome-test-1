@@ -115,6 +115,10 @@
 ;; f should be...
 ;;
 
+(defn proc-pop [acc x]
+  (conj acc
+        ((fnil #(+ x %) 0) (peek acc))))
+
 (doc generate-population)
 
 (def test-pop (generate-population 5 5))
@@ -134,13 +138,11 @@ rulete-position
   test-pop rulete-position fitnesses))
 pop-map
 
-(print-table pop-map)
 
 ;; get genome by rulete position....
 ;; if random value is lower or equal to rulete then we have our guy
 
 (->> pop-map last :rulete)
-()
 
 (defn return-random-rulete [population-map]
   (let [rulete-value (rand-int (-> population-map last :rulete inc))]
@@ -148,28 +150,49 @@ pop-map
              #(<= rulete-value (% :rulete))
              population-map))))
 
-(return-random-rulete pop-map)
+
+ (def rulete-freq (frequencies (repeatedly 100000 #(return-random-rulete pop-map))))
+ (pprint rulete-freq)
+
+
+ rulete-freq
+
+
+ (let [fitness-sum (->> rulete-freq
+                        keys
+                        (map :fitness)
+                        (reduce +))
+       freq-sum (->> rulete-freq
+                     vals
+                     (reduce +))]
+ )
+
+ (update {:j "John"} :a (fn [v] "Arc"))
+
+ (->> rulete-freq
+      keys
+      (map #(update % :fitness (fn [v]
+                                 (-> v
+                                     (/ 853)
+                                     (* 100)
+                                     double))))
+      pprint)
+
+
+ (let [{:keys [kk]} {:kk "val"}]
+   kk)
+
+
+
+
 
 
 (apply max-key :rulete pop-map)
-
-(defn proc-pop [acc x]
-  (conj acc
-        ((fnil #(+ x %) 0) (peek acc))))
-
-(reduce proc-pop [] [1 2 3])
-
-(proc-pop [] 1)
-
-(let [x 1]
-  (fnil #(+ x) 0))
 
 
 
 (map #(hash-map :val %) test-pop)
 
-(let [val-sum (reduce + test-pop)]
-  val-sum)
 
 
 
